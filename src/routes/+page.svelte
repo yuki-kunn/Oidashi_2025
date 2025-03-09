@@ -73,7 +73,8 @@
 
   main.horizontal-scroll {
     flex: 1.25;
-    overflow: hidden;  /* スクロールバーを完全に非表示に */
+    overflow-x: auto;
+    overflow-y: hidden;
   }
 
   .content-sections {
@@ -82,7 +83,6 @@
     display: flex;
     padding: 0;
     margin: 0;
-    overflow: hidden;  /* スクロールバーを完全に非表示に */
   }
 
   .loading { 
