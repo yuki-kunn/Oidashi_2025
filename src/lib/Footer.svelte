@@ -1,5 +1,9 @@
 <script>
-  // フッターセクションのスクリプト
+  import { goto } from '$app/navigation';
+
+  function handlePlusClick() {
+    goto('/add-event');
+  }
 </script>
 
 <!-- フッターセクション -->
@@ -9,7 +13,7 @@
     <div class="section yellow"></div>
     <div class="section orange"></div>
     <div class="section red"></div>
-    <button class="plus-button">
+    <button class="plus-button" on:click={handlePlusClick}>
       <span>+</span>
     </button>
   </div>
