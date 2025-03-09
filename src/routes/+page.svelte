@@ -3,6 +3,27 @@
   import Header from "../lib/Header.svelte";
   import Footer from "../lib/Footer.svelte";
   import SidePanel from "../lib/SidePanel.svelte";
+  import ActivityChart from "../lib/ActivityChart.svelte";
+  import { fetchHistoryList } from '$lib/supabaseFunction';
+  import { onMount } from 'svelte';
+
+  let historyList = [];
+  let isLoading = true;
+
+  const getHistoryList = async () => {
+    try {
+      const data = await fetchHistoryList();
+      if (data && data.length > 0) {
+        historyList = data;
+      }
+    } catch (error) {
+      console.error('履歴の取得中にエラーが発生しました:', error);
+    } finally {
+      isLoading = false;
+    }
+  };
+
+  onMount(getHistoryList);
 </script>
 
 <div class="page-container">
@@ -10,32 +31,14 @@
   <div class="content-wrapper">
     <main class="horizontal-scroll">
       <div class="content-sections">
-        {#each Array(24) as _, i}
-          <div class="vertical-line" style="left: {(i + 1) * 4.16}%"></div>
-        {/each}
-        <div class="month-labels">
-          {#each ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'] as month, i}
-            <div class="month-label" style="left: {(i * 8.33) + 4.16}%">{month}</div>
-          {/each}
-        </div>
-        <div class="section light-gray">
-          <div class="event-item" style="left: 10%; width: 15%;">
-            <div class="event-content">イベント1</div>
+        {#if isLoading}
+          <div class="loading">
+            <p>データを読み込み中...</p>
+            <div class="spinner"></div>
           </div>
-          <div class="event-item" style="left: 35%; width: 20%;">
-            <div class="event-content">イベント2</div>
-          </div>
-        </div>
-        <div class="section medium-gray">
-          <div class="event-item" style="left: 55%; width: 25%;">
-            <div class="event-content">イベント3</div>
-          </div>
-        </div>
-        <div class="section light-gray">
-          <div class="event-item" style="left: 85%; width: 10%;">
-            <div class="event-content">イベント4</div>
-          </div>
-        </div>
+        {:else}
+          <ActivityChart {historyList} />
+        {/if}
       </div>
     </main>
     <SidePanel />
@@ -72,72 +75,37 @@
     flex: 1.25;
     overflow-x: auto;
     overflow-y: hidden;
-    white-space: nowrap;
   }
 
   .content-sections {
-    display: inline-flex;
-    flex-direction: column;
     height: 100%;
-    width: 300%; /* さらに横幅を広げる */
-    position: relative;
-    min-width: 1500px; /* 最低限の幅を確保 */
-  }
-
-  .vertical-line {
-    position: absolute;
-    width: 1px;
-    height: 100%;
-    background-color: #A0A0A0;
-    z-index: 1;
-  }
-
-  .section {
-    flex: 1;
-    margin: 0;
-    padding: 0;
     width: 100%;
-  }
-  
-  .light-gray {
-    background-color: #F5F5F5;
-  }
-  
-  .medium-gray {
-    background-color: #E6E6E6;
-  }
-
-  .month-labels {
-    position: absolute;
-    top: 5px;
-    width: 100%;
-    height: 20px;
-    z-index: 2;
-  }
-
-  .month-label {
-    position: absolute;
-    font-size: 12px;
-    font-weight: bold;
-    color: #555;
-  }
-
-  .event-item {
-    position: absolute;
-    background-color: rgba(83, 97, 170, 0.7);
-    height: 80%;
-    top: 10%;
-    border-radius: 4px;
-    z-index: 3;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 0;
+    margin: 0;
   }
 
-  .event-content {
-    color: white;
-    font-weight: bold;
-    padding: 5px;
-    text-align: center;
+  .loading { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+  }
+
+  .spinner {
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border-left-color: #5361AA;
+    animation: spin 1s linear infinite;
+    margin-top: 10px;
+  }
+
+  @keyframes spin { 
+    0% { transform: rotate(0deg); } 
+    100% { transform: rotate(360deg); } 
   }
 </style>

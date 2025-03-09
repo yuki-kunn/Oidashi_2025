@@ -2,8 +2,8 @@
 </script>
 
 <div class="side-panel">
-  <div class="panel-section blue"></div>
   <div class="panel-section green"></div>
+  <div class="panel-section blue"></div>
   <div class="panel-section red"></div>
 </div>
 
