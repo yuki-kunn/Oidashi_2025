@@ -9,3 +9,13 @@ export const fetchHistoryList = async () => {
 
   return data;
 };
+
+export const fetchOrgList = async () => {
+  const { data, error } = await supabase.from("org").select("*");
+
+  if (error) {
+    console.error("Supabase error:", error);
+  }
+
+  return data;
+};
