@@ -19,3 +19,13 @@ export const fetchOrgList = async () => {
 
   return data;
 };
+
+export const fetchBtyList = async () => {
+  const { data, error } = await supabase.from("butyo").select("*");
+
+  if (error) {
+    console.error("Supabase error:", error);
+  }
+
+  return data;
+};
